@@ -11,3 +11,6 @@ Map Matching: https://en.wikipedia.org/wiki/Map_matching
 
 Hmmlearn tutorial: https://hmmlearn.readthedocs.io/en/latest/tutorial.html#training-hmm-parameters-and-inferring-the-hidden-states
 
+	Example of training hidden markov model using hmmlearn and numpy for csv processing: 
+	
+	https://stackoverflow.com/questions/41674955/how-does-the-hmm-model-in-hmmlearn-identifies-the-hidden-states
