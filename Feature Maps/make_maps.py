@@ -102,34 +102,29 @@ def make_maps():
 
     # These three groups will show the heatmaps made from the binary images
     
-    # l_dists = find_distances(land)
-    # l_map = cv2.applyColorMap(np.uint8(255 * l_dists), cv2.COLORMAP_JET)
-    # cv2.imshow('land heatmap', l_map)
-    # cv2.waitKey(0)
+    l_dists = find_distances(land)
+    l_map = cv2.applyColorMap(np.uint8(255 * l_dists), cv2.COLORMAP_JET)
+    cv2.imshow('land heatmap', l_map)
+    cv2.waitKey(0)
 
-    # c_dists = find_distances(coastline)
-    # c_map = cv2.applyColorMap(np.uint8(255 * c_dists), cv2.COLORMAP_JET)
-    # cv2.imshow('coasr heatmap', c_map)
-    # cv2.waitKey(0)
+    c_dists = find_distances(coastline)
+    c_map = cv2.applyColorMap(np.uint8(255 * c_dists), cv2.COLORMAP_JET)
+    cv2.imshow('coasr heatmap', c_map)
+    cv2.waitKey(0)
 
-    # f_dists = find_distances(forest)
-    # f_map = cv2.applyColorMap(np.uint8(255 * f_dists), cv2.COLORMAP_JET)
-    # cv2.imshow('forest heatmap', f_map)
-    # cv2.waitKey(0)
+    f_dists = find_distances(forest)
+    f_map = cv2.applyColorMap(np.uint8(255 * f_dists), cv2.COLORMAP_JET)
+    cv2.imshow('forest heatmap', f_map)
+    cv2.waitKey(0)
 
     # These three will save the maps to a file
 
-    # cv2.imwrite('maps/land_heatmap.png', l_map)
-    # print('land done')
-    # cv2.waitKey(0)
+    cv2.imwrite('maps/land_heatmap.png', l_map)
 
-    # cv2.imwrite('maps/coast_heatmap.png', c_map)
-    # print('coast done')
-    # cv2.waitKey(0)
+    cv2.imwrite('maps/coast_heatmap.png', c_map)
 
-    # cv2.imwrite('maps/forest_heatmap.png', f_map)
-    # print('forest done')
-    # cv2.waitKey(0)
+    cv2.imwrite('maps/forest_heatmap.png', f_map)
+
 
 if __name__ == '__main__':
     make_maps()
