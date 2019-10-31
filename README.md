@@ -12,3 +12,4 @@ NEXT STEPS
   4. Generate Plots and Graphics
   5. Analyze Results
   6. Tweak Approach and Variables
+  7. Wash. Rinse. Repeat
