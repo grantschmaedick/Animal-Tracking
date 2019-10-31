@@ -1,8 +1,12 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 from irl_imitation.mdp.gridworld import *
 from irl_imitation.mdp.value_iteration import *
-
+from irl_imitation.utils import *
+from irl_imitation.maxent_irl import *
+from irl_imitation.deep_maxent_irl import *
+from irl_imitation.lp_irl import *
 
 H = 10
 W = 10
@@ -57,5 +61,9 @@ def main():
     P_a = gw.get_transition_mat()
 
     values_gt, policy_gt = value_iteration(P_a, rewards_gt, GAMMA, error=0.01, deterministic = True)
+
+    feat_map = np.load('Feature Maps/small_maps/forest.npy')
+
+    trajs = generate_demonstrations(gw, policy_gt)
 
 main()
