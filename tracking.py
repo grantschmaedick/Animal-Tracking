@@ -1,3 +1,7 @@
+import numpy as np
+from irl_imitation.mdp import gridworld
+from irl_imitation import value_iteration
+
 H = 10
 W = 10
 GAMMA = .7
