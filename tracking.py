@@ -8,9 +8,11 @@ from irl_imitation.maxent_irl import *
 from irl_imitation.deep_maxent_irl import *
 from irl_imitation.lp_irl import *
 
-H = 10
-W = 10
+H = 109
+W = 72
 GAMMA = .7
+N_ITERS = 20
+LEARNING_RATE = .01
 
 def generate_demonstrations(gw, policy, n_trajs=100, len_traj=20, rand_start=False, start_pos=[0,0]):
   """gatheres expert demonstrations
@@ -64,6 +66,25 @@ def main():
 
     feat_map = np.load('Feature Maps/small_maps/forest.npy')
 
+    print(feat_map.shape)
+
     trajs = generate_demonstrations(gw, policy_gt)
+
+    print 'Deep Max Ent IRL training ..'
+    print 'Deep Max Ent IRL training ..'
+    rewards = deep_maxent_irl(feat_map, P_a, GAMMA, trajs, LEARNING_RATE, N_ITERS)
+
+    values, _ = value_iteration.value_iteration(P_a, rewards, GAMMA, error=0.01, deterministic=True)
+    # plots
+    plt.figure(figsize=(20,4))
+    plt.subplot(1, 4, 1)
+    img_utils.heatmap2d(np.reshape(rewards_gt, (H,W), order='F'), 'Rewards Map - Ground Truth', block=False)
+    plt.subplot(1, 4, 2)
+    img_utils.heatmap2d(np.reshape(values_gt, (H,W), order='F'), 'Value Map - Ground Truth', block=False)
+    plt.subplot(1, 4, 3)
+    img_utils.heatmap2d(np.reshape(rewards, (H,W), order='F'), 'Reward Map - Recovered', block=False)
+    plt.subplot(1, 4, 4)
+    img_utils.heatmap2d(np.reshape(values, (H,W), order='F'), 'Value Map - Recovered', block=False)
+    plt.show()
 
 main()
