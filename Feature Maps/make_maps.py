@@ -101,7 +101,7 @@ def make_maps():
     cv2.waitKey(0)
 
     # These three groups will show the heatmaps made from the binary images
-    
+
     l_dists = find_distances(land)
     l_map = cv2.applyColorMap(np.uint8(255 * l_dists), cv2.COLORMAP_JET)
     cv2.imshow('land heatmap', l_map)
