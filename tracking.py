@@ -60,7 +60,7 @@ def main():
 
     P_a = gw.get_transition_mat()
 
-    values_gt, policy_gt = value_iteration(P_a, rewards_gt, GAMMA, error=0.01, deterministic = True)
+    values_gt, policy_gt = value_iteration.value_iteration(P_a, rewards_gt, GAMMA, error=0.01, deterministic = True)
 
     feat_map = np.load('Feature Maps/small_maps/forest.npy')
 
