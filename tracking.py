@@ -8,8 +8,8 @@ from irl_imitation.maxent_irl import *
 from irl_imitation.deep_maxent_irl import *
 from irl_imitation.lp_irl import *
 
-H = 109
-W = 72
+H = 30
+W = 20
 GAMMA = .7
 N_ITERS = 20
 LEARNING_RATE = .01
@@ -65,6 +65,7 @@ def main():
     values_gt, policy_gt = value_iteration.value_iteration(P_a, rewards_gt, GAMMA, error=0.01, deterministic = True)
 
     feat_map = np.load('Feature Maps/small_maps/forest.npy')
+    feat_map = np.reshape(feat_map, (N_STATES, 1))
 
     print(feat_map.shape)
 
