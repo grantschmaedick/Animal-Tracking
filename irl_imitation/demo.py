@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import argparse
 from collections import namedtuple
-
+import pandas as pd
 
 import img_utils
 from mdp import gridworld
@@ -11,6 +11,8 @@ from deep_maxent_irl import *
 from maxent_irl import *
 from utils import *
 from lp_irl import *
+from return_pixel import *
+
 
 Step = namedtuple('Step','cur_state action next_state reward done')
 
@@ -42,90 +44,97 @@ RAND_START = ARGS.rand_start
 LEARNING_RATE = ARGS.learning_rate
 N_ITERS = ARGS.n_iters
 
-
-def generate_demonstrations(gw, policy, n_trajs=100, len_traj=20, rand_start=False, start_pos=[0,0]):
-  """gatheres expert demonstrations
-
-  inputs:
-  gw          Gridworld - the environment
-  policy      Nx1 matrix
-  n_trajs     int - number of trajectories to generate
-  rand_start  bool - randomly picking start position or not
-  start_pos   2x1 list - set start position, default [0,0]
-  returns:
-  trajs       a list of trajectories - each element in the list is a list of Steps representing an episode
-  """
-
-  trajs = []
-  for i in range(n_trajs):
-    if rand_start:
-      # override start_pos
-      start_pos = [np.random.randint(0, gw.height), np.random.randint(0, gw.width)]
-
-    episode = []
-    gw.reset(start_pos)
-    cur_state = start_pos
-    cur_state, action, next_state, reward, is_done = gw.step(int(policy[gw.pos2idx(cur_state)]))
-    episode.append(Step(cur_state=gw.pos2idx(cur_state), action=action, next_state=gw.pos2idx(next_state), reward=reward, done=is_done))
-    # while not is_done:
-    for _ in range(len_traj):
-        cur_state, action, next_state, reward, is_done = gw.step(int(policy[gw.pos2idx(cur_state)]))
-        episode.append(Step(cur_state=gw.pos2idx(cur_state), action=action, next_state=gw.pos2idx(next_state), reward=reward, done=is_done))
-        if is_done:
-            break
-    trajs.append(episode)
-  return trajs
+# Import data
+df = pd.read_csv("csvs/Morongo-57957.csv")
+locations = df[['location-lat', 'location-long']]
+pixel_locations = locations.apply(return_pixel, axis=1)
+pixel_locations = pixel_locations.floordiv(18)
+print(pixel_locations)
 
 
-def main():
-  N_STATES = H * W
-  N_ACTIONS = 5
+# def generate_demonstrations(gw, policy, n_trajs=100, len_traj=20, rand_start=False, start_pos=[0,0]):
+#   """gatheres expert demonstrations
 
-  rmap_gt = np.zeros([H, W])
-  rmap_gt[H-2, W-2] = R_MAX
-  rmap_gt[1, 1] = R_MAX
-  # rmap_gt[H/2, W/2] = R_MAX
+#   inputs:
+#   gw          Gridworld - the environment
+#   policy      Nx1 matrix
+#   n_trajs     int - number of trajectories to generate
+#   rand_start  bool - randomly picking start position or not
+#   start_pos   2x1 list - set start position, default [0,0]
+#   returns:
+#   trajs       a list of trajectories - each element in the list is a list of Steps representing an episode
+#   """
+
+#   trajs = []
+#   for i in range(n_trajs):
+#     if rand_start:
+#       # override start_pos
+#       start_pos = [np.random.randint(0, gw.height), np.random.randint(0, gw.width)]
+
+#     episode = []
+#     gw.reset(start_pos)
+#     cur_state = start_pos
+#     cur_state, action, next_state, reward, is_done = gw.step(int(policy[gw.pos2idx(cur_state)]))
+#     episode.append(Step(cur_state=gw.pos2idx(cur_state), action=action, next_state=gw.pos2idx(next_state), reward=reward, done=is_done))
+#     # while not is_done:
+#     for _ in range(len_traj):
+#         cur_state, action, next_state, reward, is_done = gw.step(int(policy[gw.pos2idx(cur_state)]))
+#         episode.append(Step(cur_state=gw.pos2idx(cur_state), action=action, next_state=gw.pos2idx(next_state), reward=reward, done=is_done))
+#         if is_done:
+#             break
+#     trajs.append(episode)
+#   return trajs
 
 
-  gw = gridworld.GridWorld(rmap_gt, {}, 1 - ACT_RAND)
+# def main():
+#   N_STATES = H * W
+#   N_ACTIONS = 5
 
-  rewards_gt = np.reshape(rmap_gt, H*W, order='F')
-  P_a = gw.get_transition_mat()
+#   rmap_gt = np.zeros([H, W])
+#   rmap_gt[H-2, W-2] = R_MAX
+#   rmap_gt[1, 1] = R_MAX
+#   # rmap_gt[H/2, W/2] = R_MAX
 
-  values_gt, policy_gt = value_iteration.value_iteration(P_a, rewards_gt, GAMMA, error=0.01, deterministic=True)
+
+#   gw = gridworld.GridWorld(rmap_gt, {}, 1 - ACT_RAND)
+
+#   rewards_gt = np.reshape(rmap_gt, H*W, order='F')
+#   P_a = gw.get_transition_mat()
+
+#   values_gt, policy_gt = value_iteration.value_iteration(P_a, rewards_gt, GAMMA, error=0.01, deterministic=True)
   
-  rewards_gt = normalize(values_gt)
-  gw = gridworld.GridWorld(np.reshape(rewards_gt, (H,W), order='F'), {}, 1 - ACT_RAND)
-  P_a = gw.get_transition_mat()
-  values_gt, policy_gt = value_iteration.value_iteration(P_a, rewards_gt, GAMMA, error=0.01, deterministic=True)
+#   rewards_gt = normalize(values_gt)
+#   gw = gridworld.GridWorld(np.reshape(rewards_gt, (H,W), order='F'), {}, 1 - ACT_RAND)
+#   P_a = gw.get_transition_mat()
+#   values_gt, policy_gt = value_iteration.value_iteration(P_a, rewards_gt, GAMMA, error=0.01, deterministic=True)
 
 
-  # use identity matrix as feature
-  # feat_map = np.eye(N_STATES)
+#   # use identity matrix as feature
+#   # feat_map = np.eye(N_STATES)
 
-  feat_map = np.load('coast.npy')
-  feat_map = np.reshape(feat_map, (N_STATES, 1))
+#   feat_map = np.load('coast.npy')
+#   feat_map = np.reshape(feat_map, (N_STATES, 1))
 
 
-  trajs = generate_demonstrations(gw, policy_gt, n_trajs=N_TRAJS, len_traj=L_TRAJ, rand_start=RAND_START)
-  print 'LP IRL training ..'
-  rewards_lpirl = lp_irl(P_a, policy_gt, gamma=0.3, l1=10, R_max=R_MAX)
-  # print 'Max Ent IRL training ..'
-  # rewards_maxent = maxent_irl(feat_map, P_a, GAMMA, trajs, LEARNING_RATE*2, N_ITERS*2)
-  # print 'Deep Max Ent IRL training ..'
-  # rewards = deep_maxent_irl(feat_map, P_a, GAMMA, trajs, LEARNING_RATE, N_ITERS)
+#   trajs = generate_demonstrations(gw, policy_gt, n_trajs=N_TRAJS, len_traj=L_TRAJ, rand_start=RAND_START)
+#   print 'LP IRL training ..'
+#   rewards_lpirl = lp_irl(P_a, policy_gt, gamma=0.3, l1=10, R_max=R_MAX)
+#   # print 'Max Ent IRL training ..'
+#   # rewards_maxent = maxent_irl(feat_map, P_a, GAMMA, trajs, LEARNING_RATE*2, N_ITERS*2)
+#   # print 'Deep Max Ent IRL training ..'
+#   # rewards = deep_maxent_irl(feat_map, P_a, GAMMA, trajs, LEARNING_RATE, N_ITERS)
 
-  # plots
-  plt.figure()
-  # plt.subplot(1, 2, 1)
-  # img_utils.heatmap2d(np.reshape(rewards_gt, (H,W), order='F'), 'Rewards Map - Ground Truth', block=False)
-  plt.subplot(1, 1, 1)
-  img_utils.heatmap2d(np.reshape(rewards_lpirl, (H,W), order='F'), 'Reward Map - LP', block=False)
-  # plt.subplot(1, 1, 1)
-  # img_utils.heatmap2d(np.reshape(rewards_maxent, (H,W), order='F'), 'Reward Map - Maxent', block=False)
-  # plt.subplot(1, 4, 4)
-  # img_utils.heatmap2d(np.reshape(rewards, (H,W), order='F'), 'Reward Map - Deep Maxent', block=False)
-  plt.show()
+#   # plots
+#   plt.figure()
+#   # plt.subplot(1, 2, 1)
+#   # img_utils.heatmap2d(np.reshape(rewards_gt, (H,W), order='F'), 'Rewards Map - Ground Truth', block=False)
+#   plt.subplot(1, 1, 1)
+#   img_utils.heatmap2d(np.reshape(rewards_lpirl, (H,W), order='F'), 'Reward Map - LP', block=False)
+#   # plt.subplot(1, 1, 1)
+#   # img_utils.heatmap2d(np.reshape(rewards_maxent, (H,W), order='F'), 'Reward Map - Maxent', block=False)
+#   # plt.subplot(1, 4, 4)
+#   # img_utils.heatmap2d(np.reshape(rewards, (H,W), order='F'), 'Reward Map - Deep Maxent', block=False)
+#   plt.show()
 
 
 

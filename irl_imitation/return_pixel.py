@@ -1,20 +1,23 @@
 import math
+import pandas as pd
 
+def return_pixel(row):
 
-def return_pixel(lat, lon):
     """Takes in a latitude and longitude coord and returns a pixel location"""
+    lat = row['location-lat']
+    lon = row['location-long']
 
     assert(isinstance(lat, float))
     assert(isinstance(lon, float))
 
-    map_width = 1928
-    map_height = 1378
+    map_width = 360
+    map_height = 540
 
-    map_lon_left = -136.18
-    map_lon_right = -51.55
+    map_lon_left = -126.5302
+    map_lon_right = -112.6693
     map_lon_delta = map_lon_right - map_lon_left
 
-    map_lat_bottom = 6.72
+    map_lat_bottom = 30.1206
     map_lat_bottom_degree = map_lat_bottom * math.pi / 180
 
     x = (lon - map_lon_left) * (map_width / map_lon_delta)
@@ -66,8 +69,8 @@ def return_lat_lon(x, y):
 
 
 if __name__ == "__main__":
-    width = 1928
-    height = 1378
+    width = 360
+    height = 540
 
     min_lon_delta = float("inf")
     min_lat_delta = float("inf")
