@@ -25,8 +25,6 @@ PARSER.set_defaults(rand_start=False)
 PARSER.add_argument('-lr', '--learning_rate', default=0.01, type=float, help='learning rate')
 PARSER.add_argument('-ni', '--n_iters', default=20, type=int, help='number of iterations')
 ARGS = PARSER.parse_args()
-print ARGS
-
 
 GAMMA = ARGS.gamma
 ACT_RAND = ARGS.act_random
@@ -121,6 +119,7 @@ def main():
   
   # use identity matrix as feature
   feat_map = np.eye(N_STATES)
+  print(feat_map.shape)
 
   # other two features. due to the linear nature, 
   # the following two features might not work as well as the identity.
