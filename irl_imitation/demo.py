@@ -47,7 +47,7 @@ N_ITERS = ARGS.n_iters
 # Import data
 df = pd.read_csv("csvs/Morongo-57957.csv")
 locations = df[['location-lat', 'location-long']]
-pixel_locations = pd.DataFrame.from_records(locations.apply(return_pixel, axis=1), columns=['location-lat', 'location-long'])
+pixel_locations = pd.DataFrame.from_records(list(locations.apply(return_pixel, axis=1)), columns=['location-lat', 'location-long'])
 pixel_locations = pixel_locations.floordiv(18)
 print(pixel_locations)
 
