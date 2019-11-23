@@ -89,10 +89,12 @@ def generate_demonstrations(gw, policy, n_trajs=100, len_traj=20, rand_start=Fal
 def main():
   N_STATES = H * W
   N_ACTIONS = 5
+  start_coordinates = (pixel_locations['location-long'][0], pixel_locations['location-lat'][0])
+  end_coordinates = (pixel_locations['location-long'][len(pixel_locations.index) - 1], pixel_locations['location-lat'][len(pixel_locations.index) - 1])
 
   rmap_gt = np.zeros([H, W])
-  rmap_gt[H-2, W-2] = R_MAX
-  rmap_gt[1, 1] = R_MAX
+  rmap_gt[int(start_coordinates[0]), int(start_coordinates[1])] = R_MAX
+  rmap_gt[int(end_coordinates[0]), int(end_coordinates[1])] = R_MAX
   # rmap_gt[H/2, W/2] = R_MAX
 
 
