@@ -2,7 +2,6 @@ import math
 import pandas as pd
 
 def return_pixel(row):
-
     """Takes in a latitude and longitude coord and returns a pixel location"""
     lat = row['location-lat']
     lon = row['location-long']

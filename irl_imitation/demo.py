@@ -47,54 +47,40 @@ N_ITERS = ARGS.n_iters
 # Import data
 df = pd.read_csv("csvs/Morongo-57957.csv")
 locations = df[['location-lat', 'location-long']]
+in_range = locations['location-long'] <= -112.6693 
+in_range2 = locations['location-long'] >= -126.5302
+locations = locations[in_range & in_range2] 
+in_range_lat = locations['location-lat'] >= 30.1206
+locations = locations[in_range_lat]
 pixel_locations = pd.DataFrame.from_records(list(locations.apply(return_pixel, axis=1)), columns=['location-lat', 'location-long'])
 pixel_locations = pixel_locations.floordiv(18)
-print(pixel_locations)
+# print(pixel_locations)
 
 
+def get_action(loc, next_loc):
+    x_diff, y_diff = next_loc - loc
+    x_diff = int(x_diff)
+    y_diff = int(y_diff)
+    if x_diff == 0 and y_diff == 0:
+        return 4
+    if x_diff == 1 and y_diff == 0:
+        return 3
+    if x_diff == -1 and y_diff == 0:
+        return 2
+    if x_diff == 0 and y_diff == -1:
+        return 1
+    if x_diff == 0 and y_diff == 1:
+        return 0
 
-
-def generate_demonstrations(gw, policy, n_trajs=100, len_traj=20, rand_start=False, start_pos=[0,0]):
-  """gatheres expert demonstrations
-
-  inputs:
-  gw          Gridworld - the environment
-  policy      Nx1 matrix
-  n_trajs     int - number of trajectories to generate
-  rand_start  bool - randomly picking start position or not
-  start_pos   2x1 list - set start position, default [0,0]
-  returns:
-  trajs       a list of trajectories - each element in the list is a list of Steps representing an episode
-  """
-
-  trajs = []
-  for i in range(n_trajs):
-    if rand_start:
-      # override start_pos
-      start_pos = [np.random.randint(0, gw.height), np.random.randint(0, gw.width)]
-
-    episode = []
-    gw.reset(start_pos)
-    cur_state = start_pos
-    cur_state, action, next_state, reward, is_done = gw.step(int(policy[gw.pos2idx(cur_state)]))
-    episode.append(Step(cur_state=gw.pos2idx(cur_state), action=action, next_state=gw.pos2idx(next_state), reward=reward, done=is_done))
-    # while not is_done:
-    for _ in range(len_traj):
-        cur_state, action, next_state, reward, is_done = gw.step(int(policy[gw.pos2idx(cur_state)]))
-        episode.append(Step(cur_state=gw.pos2idx(cur_state), action=action, next_state=gw.pos2idx(next_state), reward=reward, done=is_done))
-        if is_done:
-            break
-    trajs.append(episode)
-  return trajs
 
 
 def main():
   N_STATES = H * W
   N_ACTIONS = 5
-  start_coordinates = (pixel_locations['location-long'][0], pixel_locations['location-lat'][0])
-  end_coordinates = (pixel_locations['location-long'][len(pixel_locations.index) - 1], pixel_locations['location-lat'][len(pixel_locations.index) - 1])
+  start_coordinates = (pixel_locations['location-lat'][0], pixel_locations['location-long'][0])
+  end_coordinates = (pixel_locations['location-lat'][len(pixel_locations.index) - 1], pixel_locations['location-long'][len(pixel_locations.index) - 1])
 
-  rmap_gt = np.zeros([H, W])
+  rmap_gt = np.zeros([W, H])
   rmap_gt[int(start_coordinates[0]), int(start_coordinates[1])] = R_MAX
   rmap_gt[int(end_coordinates[0]), int(end_coordinates[1])] = R_MAX
   # rmap_gt[H/2, W/2] = R_MAX
@@ -121,8 +107,25 @@ def main():
   land_map = np.load('Feature Maps/small_maps/land.npy')
   feat_map = np.hstack((coast_map, forest_map, land_map))
 
+# populate trajectories
+  trajs = []
+  terminal_state = end_coordinates
+  for i in range(len(pixel_locations) - 1):
+      loc = pixel_locations.iloc[i]
+      next_loc = pixel_locations.iloc[i + 1]
+      print(i, loc, next_loc)
+      action = get_action(loc, next_loc)
+      reward = rmap_gt[int(next_loc[0]), int(next_loc[1])]
+      is_done = np.array_equal(next_loc, terminal_state)
 
-  trajs = generate_demonstrations(gw, policy_gt, n_trajs=1, len_traj=len(pixel_locations.index), rand_start=RAND_START)
+      trajs.append(Step(cur_state=gw.pos2idx(loc),
+                        action=action,
+                        next_state=gw.pos2idx(next_loc),
+                        reward=reward,
+                        done=is_done))
+  
+  print(trajs)
+
   print 'LP IRL training ..'
   rewards_lpirl = lp_irl(P_a, policy_gt, gamma=0.3, l1=10, R_max=R_MAX)
   # print 'Max Ent IRL training ..'
