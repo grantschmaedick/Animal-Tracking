@@ -23,7 +23,7 @@ def get_action(loc, next_loc):
 # Initialize gridworld
 rmap_gt = np.zeros((H, W))
 terminal_state = locations[-1]
-rmap_gt[H - terminal_state[0], terminal_state[1]] = 1
+rmap_gt[terminal_state[0], terminal_state[1]] = 1
 print(terminal_state)
 
 trajs = []
