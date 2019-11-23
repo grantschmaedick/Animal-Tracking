@@ -52,6 +52,8 @@ pixel_locations = pixel_locations.floordiv(18)
 print(pixel_locations)
 
 
+
+
 def generate_demonstrations(gw, policy, n_trajs=100, len_traj=20, rand_start=False, start_pos=[0,0]):
   """gatheres expert demonstrations
 
@@ -118,10 +120,9 @@ def main():
   forest_map = np.load('Feature Maps/small_maps/forest.npy')
   land_map = np.load('Feature Maps/small_maps/land.npy')
   feat_map = np.hstack((coast_map, forest_map, land_map))
-  feat_map = np.reshape(feat_map, (N_STATES, 1))
 
 
-  trajs = generate_demonstrations(gw, policy_gt, n_trajs=N_TRAJS, len_traj=L_TRAJ, rand_start=RAND_START)
+  trajs = generate_demonstrations(gw, policy_gt, n_trajs=1, len_traj=len(pixel_locations.index), rand_start=RAND_START)
   print 'LP IRL training ..'
   rewards_lpirl = lp_irl(P_a, policy_gt, gamma=0.3, l1=10, R_max=R_MAX)
   # print 'Max Ent IRL training ..'
