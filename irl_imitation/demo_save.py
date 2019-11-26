@@ -4,7 +4,7 @@ import argparse
 from collections import namedtuple
 import pandas as pd
 
-import img_utils
+#import img_utils
 from mdp import gridworld
 from mdp import value_iteration
 from deep_maxent_irl import *
