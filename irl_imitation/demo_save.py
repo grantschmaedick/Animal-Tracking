@@ -110,8 +110,6 @@ def main():
   land_map = np.load('Feature Maps/small_maps/land.npy')
   feat_map = np.hstack((coast_map, forest_map, land_map))
 
-  feat_map = np.reshape(coast_map, 600)
-
 # populate trajectories
   trajs = []
   terminal_state = end_coordinates
@@ -123,9 +121,9 @@ def main():
       reward = rmap_gt[int(next_loc[0]), int(next_loc[1])]
       is_done = np.array_equal(next_loc, terminal_state)
 
-      trajs.append(Step(cur_state=gw.pos2idx(loc),
+      trajs.append(Step(cur_state=loc,
                         action=action,
-                        next_state=gw.pos2idx(next_loc),
+                        next_state=next_loc,
                         reward=reward,
                         done=is_done))
 
