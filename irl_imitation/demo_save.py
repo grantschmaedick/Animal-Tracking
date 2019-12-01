@@ -57,7 +57,6 @@ in_range_lat = locations['location-lat'] >= 30.1206
 locations = locations[in_range_lat]
 pixel_locations = pd.DataFrame.from_records(list(locations.apply(return_pixel, axis=1)), columns=['location-lat', 'location-long'])
 pixel_locations = pixel_locations.floordiv(18)
-print(max(pixel_locations), min(pixel_locations))
 
 
 def get_action(loc, next_loc):
@@ -111,7 +110,6 @@ def main():
   land_map = np.load('Feature Maps/small_maps/land.npy')
   feat_map = np.hstack((coast_map, forest_map, land_map))
 
-  print(feat_map)
 
 # populate trajectories
   trajs = []
@@ -130,6 +128,7 @@ def main():
                         reward=reward,
                         done=is_done))
 
+  print(trajs)
 
   print 'LP IRL training ..'
   rewards_lpirl = lp_irl(P_a, policy_gt, gamma=0.3, l1=10, R_max=R_MAX)
