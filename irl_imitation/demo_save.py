@@ -57,6 +57,7 @@ in_range_lat = locations['location-lat'] >= 30.1206
 locations = locations[in_range_lat]
 pixel_locations = pd.DataFrame.from_records(list(locations.apply(return_pixel, axis=1)), columns=['location-lat', 'location-long'])
 pixel_locations = pixel_locations.floordiv(18)
+print(max(pixel_locations), min(pixel_locations))
 
 
 def get_action(loc, next_loc):
@@ -114,9 +115,8 @@ def main():
   terminal_state = end_coordinates
   print("Calculating Trajectories...")
   for i in range(len(pixel_locations) - 1):
-      loc = pixel_locations.iloc[i] // 18
-      next_loc = pixel_locations.iloc[i + 1] // 18
-      print(i, loc, next_loc)
+      loc = pixel_locations.iloc[i]
+      next_loc = pixel_locations.iloc[i + 1]
       action = get_action(loc, next_loc)
       reward = rmap_gt[int(next_loc[0]), int(next_loc[1])]
       is_done = np.array_equal(next_loc, terminal_state)
