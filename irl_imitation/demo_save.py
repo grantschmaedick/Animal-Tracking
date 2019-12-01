@@ -99,6 +99,7 @@ def main():
   rewards_gt = normalize(values_gt)
   gw = gridworld.GridWorld(np.reshape(rewards_gt, (H,W), order='F'), {}, 1 - ACT_RAND)
   P_a = gw.get_transition_mat()
+    
   values_gt, policy_gt = value_iteration.value_iteration(P_a, rewards_gt, GAMMA, error=0.01, deterministic=True)
 
 
@@ -109,6 +110,8 @@ def main():
   forest_map = np.load('Feature Maps/small_maps/forest.npy')
   land_map = np.load('Feature Maps/small_maps/land.npy')
   feat_map = np.hstack((coast_map, forest_map, land_map))
+
+  print(feat_map)
 
 # populate trajectories
   trajs = []
