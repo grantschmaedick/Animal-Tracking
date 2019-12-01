@@ -71,10 +71,10 @@ def maxent_irl(feat_map, P_a, gamma, trajs, lr, n_iters):
   N_STATES, _, N_ACTIONS = np.shape(P_a)
 
   # init parameters
-  theta = np.random.uniform(size=(feat_map.shape[1] * feat_map.shape[0],))
+  theta = np.random.uniform(size=(600,))
 
   # calc feature expectations
-  feat_exp = np.zeros([feat_map.shape[1] * feat_map.shape[0]])
+  feat_exp = np.zeros([600])
   for episode in trajs:
     feat_exp += feat_map[int(episode.cur_state['location-lat']),int(episode.cur_state['location-long'])]
   feat_exp = feat_exp/len(trajs)
