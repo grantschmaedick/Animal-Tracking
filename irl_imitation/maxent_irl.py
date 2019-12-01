@@ -95,7 +95,6 @@ def maxent_irl(feat_map, P_a, gamma, trajs, lr, n_iters):
     svf = compute_state_visition_freq(P_a, gamma, trajs, policy, deterministic=False)
     
     # compute gradients
-    feat_map = np.reshape(
     grad = feat_exp - np.reshape(feat_map, (600, 3)).T.dot(svf)
 
     # update params
