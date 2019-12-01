@@ -86,7 +86,7 @@ def maxent_irl(feat_map, P_a, gamma, trajs, lr, n_iters):
     print 'iteration: {}/{}'.format(iteration, n_iters)
     
     # compute reward function
-    rewards = np.dot(np.reshape(feat_map, 600), theta)
+    rewards = np.dot(np.reshape(feat_map, (600, 3)), theta)
 
     # compute policy
     _, policy = value_iteration.value_iteration(P_a, rewards, gamma, error=0.01, deterministic=False)
