@@ -127,6 +127,7 @@ def main():
                         reward=reward,
                         done=is_done))
 
+  print(trajs)
 
   print 'LP IRL training ..'
   rewards_lpirl = lp_irl(P_a, policy_gt, gamma=0.3, l1=10, R_max=R_MAX)
