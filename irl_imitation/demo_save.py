@@ -129,9 +129,9 @@ def main():
 
 
   print 'LP IRL training ..'
-  rewards_lpirl = lp_irl(P_a, policy_gt, gamma=0.3, l1=10, R_max=R_MAX)
+  rewards_lpirl = lp_irl(P_a, policy_gt, gamma=0.3, l1=20, R_max=R_MAX)
   print 'Max Ent IRL training ..'
-  rewards_maxent = maxent_irl(feat_map, P_a, GAMMA, trajs, LEARNING_RATE*2, N_ITERS*2)
+  rewards_maxent = maxent_irl(feat_map, P_a, GAMMA, trajs, LEARNING_RATE, N_ITERS)
 #   print 'Deep Max Ent IRL training ..'
 #   rewards = deep_maxent_irl(feat_map, P_a, GAMMA, trajs, LEARNING_RATE, N_ITERS)
   
