@@ -114,8 +114,8 @@ def main():
   terminal_state = end_coordinates
   print("Calculating Trajectories...")
   for i in range(len(pixel_locations) - 1):
-      loc = pixel_locations.iloc[i]
-      next_loc = pixel_locations.iloc[i + 1]
+      loc = pixel_locations.iloc[i] // 18
+      next_loc = pixel_locations.iloc[i + 1] // 18
       print(i, loc, next_loc)
       action = get_action(loc, next_loc)
       reward = rmap_gt[int(next_loc[0]), int(next_loc[1])]
