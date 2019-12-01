@@ -47,7 +47,6 @@ LEARNING_RATE = ARGS.learning_rate
 N_ITERS = ARGS.n_iters
 
 # Import data
-print("Calculating Pixel Locations...")
 df = pd.read_csv("csvs/Morongo-57957.csv")
 locations = df[['location-lat', 'location-long']]
 in_range = locations['location-long'] <= -112.6693 
@@ -57,6 +56,7 @@ in_range_lat = locations['location-lat'] >= 30.1206
 locations = locations[in_range_lat]
 pixel_locations = pd.DataFrame.from_records(list(locations.apply(return_pixel, axis=1)), columns=['location-lat', 'location-long'])
 pixel_locations = pixel_locations.floordiv(18)
+# print(pixel_locations)
 
 
 def get_action(loc, next_loc):
@@ -115,7 +115,6 @@ def main():
 # populate trajectories
   trajs = []
   terminal_state = end_coordinates
-  print("Calculating Trajectories...")
   for i in range(len(pixel_locations) - 1):
       loc = pixel_locations.iloc[i]
       next_loc = pixel_locations.iloc[i + 1]
@@ -128,7 +127,8 @@ def main():
                         next_state=gw.pos2idx(next_loc),
                         reward=reward,
                         done=is_done))
-
+  
+  print(trajs)
 
   print 'LP IRL training ..'
   rewards_lpirl = lp_irl(P_a, policy_gt, gamma=0.3, l1=20, R_max=R_MAX)
