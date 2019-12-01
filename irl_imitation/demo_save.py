@@ -46,6 +46,13 @@ RAND_START = ARGS.rand_start
 LEARNING_RATE = ARGS.learning_rate
 N_ITERS = ARGS.n_iters
 
+coast_map = np.load('Feature Maps/small_maps/coast.npy')
+forest_map = np.load('Feature Maps/small_maps/forest.npy')
+land_map = np.load('Feature Maps/small_maps/land.npy')
+feat_map = np.hstack((coast_map, forest_map, land_map))
+
+print(feat_map.shape
+
 # Import data
 print("Calculating Pixel Locations...")
 df = pd.read_csv("csvs/Morongo-57957.csv")
