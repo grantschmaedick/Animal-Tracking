@@ -37,7 +37,7 @@ def compute_state_visition_freq(P_a, gamma, trajs, policy, deterministic=True):
   mu = np.zeros([N_STATES, T]) 
 
   for traj in trajs:
-    mu[gw.pos2idx(traj.cur_state), 0] += 1
+    mu[int((traj.cur_state['location-lat'] + traj.cur_state['location-long']) * 30), 0] += 1
   mu[:,0] = mu[:,0]/len(trajs)
 
   for s in range(N_STATES):
