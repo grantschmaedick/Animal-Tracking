@@ -121,9 +121,9 @@ def main():
       reward = rmap_gt[int(next_loc[0]), int(next_loc[1])]
       is_done = np.array_equal(next_loc, terminal_state)
 
-      trajs.append(Step(cur_state=loc,
+      trajs.append(Step(cur_state=gw.idx2pos(loc),
                         action=action,
-                        next_state=next_loc,
+                        next_state=gw.idx2pos(next_loc),
                         reward=reward,
                         done=is_done))
 
