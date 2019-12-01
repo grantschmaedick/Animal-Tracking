@@ -39,7 +39,7 @@ def value_iteration(P_a, rewards, gamma, error=0.01, deterministic=True):
 
     for s in range(N_STATES):
       v_s = []
-      print(N_STATES, N_ACTIONS, P_a.shape, s)
+      print(N_STATES, N_ACTIONS, P_a.shape, s, rewards)
       values[s] = max([sum([P_a[s, s1, a]*(rewards[s] + gamma*values_tmp[s1]) for s1 in range(N_STATES)]) for a in range(N_ACTIONS)])
 
     if max([abs(values[s] - values_tmp[s]) for s in range(N_STATES)]) < error:
