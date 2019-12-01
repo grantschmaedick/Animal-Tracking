@@ -124,13 +124,12 @@ def main():
       reward = rmap_gt[int(next_loc[0]), int(next_loc[1])]
       is_done = np.array_equal(next_loc, terminal_state)
 
-      trajs.append(Step(cur_state=gw.idx2pos(loc),
+      trajs.append(Step(cur_state=gw.pos2idx(loc),
                         action=action,
-                        next_state=gw.idx2pos(next_loc),
+                        next_state=gw.pos2idx(next_loc),
                         reward=reward,
                         done=is_done))
 
-  print(trajs)
 
   print 'LP IRL training ..'
   rewards_lpirl = lp_irl(P_a, policy_gt, gamma=0.3, l1=10, R_max=R_MAX)
