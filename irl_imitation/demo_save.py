@@ -117,6 +117,7 @@ def main():
   land_map = np.load('Feature Maps/small_maps/land.npy')
   feat_map = np.hstack((coast_map, forest_map, land_map))
 
+  feat_map = np.reshape(coast_map, 600)
 
 # populate trajectories
   trajs = []
