@@ -51,7 +51,7 @@ forest_map = np.load('Feature Maps/small_maps/forest.npy')
 land_map = np.load('Feature Maps/small_maps/land.npy')
 feat_map = np.hstack((coast_map, forest_map, land_map))
 
-print(feat_map[1,2])
+feat_map = np.reshape(coast, 600)
 
 # Import data
 print("Calculating Pixel Locations...")
