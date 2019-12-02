@@ -355,7 +355,7 @@ class GridWorld(object):
     returns:
       1d index
     """
-    return pos[0] + pos[1] * self.height
+    return pos[0] * self.width + pos[1]
 
   def idx2pos(self, idx):
     """
