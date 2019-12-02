@@ -47,7 +47,7 @@ LEARNING_RATE = ARGS.learning_rate
 N_ITERS = ARGS.n_iters
 
 # Import data
-df = pd.read_csv("csvs/Morongo-57957.csv")
+df = pd.read_csv("csvs/Artful_Dodger-163485.csv")
 locations = df[['location-lat', 'location-long']]
 in_range = locations['location-long'] <= -112.6693 
 in_range2 = locations['location-long'] >= -126.5302
