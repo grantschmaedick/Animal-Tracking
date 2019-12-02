@@ -23,14 +23,14 @@ PARSER = argparse.ArgumentParser(description=None)
 PARSER.add_argument('-hei', '--height', default=30, type=int, help='height of the gridworld')
 PARSER.add_argument('-wid', '--width', default=20, type=int, help='width of the gridworld')
 PARSER.add_argument('-g', '--gamma', default=0.9, type=float, help='discount factor')
-PARSER.add_argument('-a', '--act_random', default=0.3, type=float, help='probability of acting randomly')
+PARSER.add_argument('-a', '--act_random', default=0.5, type=float, help='probability of acting randomly')
 PARSER.add_argument('-t', '--n_trajs', default=200, type=int, help='number of expert trajectories')
 PARSER.add_argument('-l', '--l_traj', default=20, type=int, help='length of expert trajectory')
 PARSER.add_argument('--rand_start', dest='rand_start', action='store_true', help='when sampling trajectories, randomly pick start positions')
 PARSER.add_argument('--no-rand_start', dest='rand_start',action='store_false', help='when sampling trajectories, fix start positions')
 PARSER.set_defaults(rand_start=True)
-PARSER.add_argument('-lr', '--learning_rate', default=0.02, type=float, help='learning rate')
-PARSER.add_argument('-ni', '--n_iters', default=10, type=int, help='number of iterations')
+PARSER.add_argument('-lr', '--learning_rate', default=0.01, type=float, help='learning rate')
+PARSER.add_argument('-ni', '--n_iters', default=100, type=int, help='number of iterations')
 ARGS = PARSER.parse_args()
 print ARGS
 
@@ -56,7 +56,6 @@ in_range_lat = locations['location-lat'] >= 30.1206
 locations = locations[in_range_lat]
 pixel_locations = pd.DataFrame.from_records(list(locations.apply(return_pixel, axis=1)), columns=['location-lat', 'location-long'])
 pixel_locations = pixel_locations.floordiv(18)
-# print(pixel_locations)
 
 
 def get_action(loc, next_loc):
@@ -110,7 +109,6 @@ def main():
   land_map = np.load('Feature Maps/small_maps/land.npy')
   feat_map = np.hstack((coast_map, forest_map, land_map))
 
-  feat_map = np.reshape(feat_map, H*W)
 
 # populate trajectories
   trajs = []
@@ -128,12 +126,11 @@ def main():
                         reward=reward,
                         done=is_done))
   
-  print(trajs)
 
   print 'LP IRL training ..'
-  rewards_lpirl = lp_irl(P_a, policy_gt, gamma=0.3, l1=20, R_max=R_MAX)
-  print 'Max Ent IRL training ..'
-  rewards_maxent = maxent_irl(feat_map, P_a, GAMMA, trajs, LEARNING_RATE, N_ITERS)
+  rewards_lpirl = lp_irl(P_a, policy_gt, gamma=0.5, l1=100, R_max=R_MAX)
+#   print 'Max Ent IRL training ..'
+#   rewards_maxent = maxent_irl(feat_map, P_a, GAMMA, trajs, LEARNING_RATE, N_ITERS)
 #   print 'Deep Max Ent IRL training ..'
 #   rewards = deep_maxent_irl(feat_map, P_a, GAMMA, trajs, LEARNING_RATE, N_ITERS)
   
@@ -145,12 +142,12 @@ def main():
   plt.subplot(1, 1, 1)
   img_utils.heatmap2d(np.reshape(rewards_lpirl, (H,W), order='F'), 'Reward Map - LP', block=False)
   fig.savefig('LP.png')
-  plt.subplot(1, 1, 1)
-  img_utils.heatmap2d(np.reshape(rewards_maxent, (H,W), order='F'), 'Reward Map - Maxent', block=False)
-  fig.savefig('MaxEnt.png')
-  plt.subplot(1, 4, 4)
-  img_utils.heatmap2d(np.reshape(rewards, (H,W), order='F'), 'Reward Map - Deep Maxent', block=False)
-  fig.savefig('DeepMaxEnt.png')
+#   plt.subplot(1, 1, 1)
+#   img_utils.heatmap2d(np.reshape(rewards_maxent, (H,W), order='F'), 'Reward Map - Maxent', block=False)
+#   fig.savefig('MaxEnt.png')
+#   plt.subplot(1, 4, 4)
+#   img_utils.heatmap2d(np.reshape(rewards, (H,W), order='F'), 'Reward Map - Deep Maxent', block=False)
+#   fig.savefig('DeepMaxEnt.png')
   
 
 
