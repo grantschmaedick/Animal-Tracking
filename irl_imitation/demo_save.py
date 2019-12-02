@@ -133,7 +133,7 @@ def main():
 #   print 'Max Ent IRL training ..'
 #   rewards_maxent = maxent_irl(feat_map, P_a, GAMMA, trajs, LEARNING_RATE, N_ITERS)
   print 'Deep Max Ent IRL training ..'
-  rewards = deep_maxent_irl(feat_map, P_a, GAMMA, trajs, LEARNING_RATE, 5)
+  rewards = deep_maxent_irl(feat_map, P_a, GAMMA, trajs, LEARNING_RATE, 10)
   
   # plots
   fig = plt.figure()
