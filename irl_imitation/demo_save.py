@@ -126,12 +126,14 @@ def main():
                         done=is_done))
   
 
+  trajs = [trajs]
+
 #   print 'LP IRL training ..'
 #   rewards_lpirl = lp_irl(P_a, policy_gt, gamma=0.9, l1=100, R_max=R_MAX)
 #   print 'Max Ent IRL training ..'
 #   rewards_maxent = maxent_irl(feat_map, P_a, GAMMA, trajs, LEARNING_RATE, N_ITERS)
   print 'Deep Max Ent IRL training ..'
-  rewards = deep_maxent_irl(feat_map, P_a, GAMMA, trajs, LEARNING_RATE, N_ITERS)
+  rewards = deep_maxent_irl(feat_map, P_a, GAMMA, trajs, LEARNING_RATE, 5)
   
   # plots
   fig = plt.figure()
