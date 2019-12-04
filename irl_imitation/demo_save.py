@@ -149,7 +149,7 @@ def main():
 # populate trajectories
   trajs = []
   terminal_state = end_coordinates
-  for x in range(pixel_locations):
+  for x in range(len(pixel_locations)):
     trajs.append([])
     for i in range(len(pixel_locations[x]) - 1):
         loc = pixel_locations[x].iloc[i]
