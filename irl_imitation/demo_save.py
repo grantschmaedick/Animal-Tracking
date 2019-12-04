@@ -82,12 +82,11 @@ locations2 = locations2[in_range_lat2]
 locations3 = locations3[in_range_lat3]
 locations4 = locations4[in_range_lat4]
 
-pixel_locations = pd.DataFrame(columns=['1', '2', '3', '4'])
-pixel_locations['1'] = pd.DataFrame.from_records(list(locations.apply(return_pixel, axis=1)), columns=['location-lat', 'location-long'])
-pixel_locations['2'] = pd.DataFrame.from_records(list(locations2.apply(return_pixel, axis=1)), columns=['location-lat', 'location-long'])
-pixel_locations['3'] = pd.DataFrame.from_records(list(locations3.apply(return_pixel, axis=1)), columns=['location-lat', 'location-long'])
-pixel_locations['4'] = pd.DataFrame.from_records(list(locations4.apply(return_pixel, axis=1)), columns=['location-lat', 'location-long'])
-pixel_locations = pixel_locations.floordiv(18)
+pixel_locations1 = pd.DataFrame.from_records(list(locations.apply(return_pixel, axis=1)), columns=['location-lat', 'location-long']).floordiv(18)
+pixel_locations2 = pd.DataFrame.from_records(list(locations2.apply(return_pixel, axis=1)), columns=['location-lat', 'location-long']).floordiv(18)
+pixel_locations3 = pd.DataFrame.from_records(list(locations3.apply(return_pixel, axis=1)), columns=['location-lat', 'location-long']).floordiv(18)
+pixel_locations4 = pd.DataFrame.from_records(list(locations4.apply(return_pixel, axis=1)), columns=['location-lat', 'location-long']).floordiv(18)
+pixel_locations = [pixel_locations1, pixel_locations2, pixel_locations3, pixel_locations4]
 
 print(pixel_locations)
 
