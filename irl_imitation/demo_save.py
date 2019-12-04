@@ -78,7 +78,7 @@ in_range_lat3 = locations3['location-lat'] >= 30.1206
 in_range_lat4 = locations4['location-lat'] >= 30.1206
 
 locations = locations[in_range_lat]
-locations2 = location2[in_range_lat2]
+locations2 = locations2[in_range_lat2]
 locations3 = locations3[in_range_lat3]
 locations4 = locations4[in_range_lat4]
 
