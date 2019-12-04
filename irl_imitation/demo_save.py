@@ -130,27 +130,27 @@ def main():
 
   trajs = [trajs]
 
-#   print 'LP IRL training ..'
-#   rewards_lpirl = lp_irl(P_a, policy_gt, gamma=0.9, l1=100, R_max=R_MAX)
+  print 'LP IRL training ..'
+  rewards_lpirl = lp_irl(P_a, policy_gt, gamma=0.3, l1=100, R_max=R_MAX)
 #   print 'Max Ent IRL training ..'
 #   rewards_maxent = maxent_irl(feat_map, P_a, GAMMA, trajs, LEARNING_RATE, N_ITERS)
-  print 'Deep Max Ent IRL training ..'
-  rewards = deep_maxent_irl(feat_map, P_a, GAMMA, trajs, LEARNING_RATE, 10)
+#   print 'Deep Max Ent IRL training ..'
+#   rewards = deep_maxent_irl(feat_map, P_a, GAMMA, trajs, LEARNING_RATE, 10)
   
   # plots
   fig = plt.figure()
-#   plt.subplot(1, 2, 1)
-#   img_utils.heatmap2d(np.reshape(rewards_gt, (H,W), order='F'), 'Rewards Map - Ground Truth', block=False)
-#   fig.savefig('GroundTruth.png')
+  plt.subplot(1, 2, 1)
+  img_utils.heatmap2d(np.reshape(rewards_gt, (H,W), order='F'), 'Rewards Map - Ground Truth', block=False)
+  fig.savefig('GroundTruth.png')
 #   plt.subplot(1, 1, 1)
 #   img_utils.heatmap2d(np.reshape(rewards_lpirl, (H,W), order='F'), 'Reward Map - LP', block=False)
 #   fig.savefig('LP.png')
 #   plt.subplot(1, 1, 1)
 #   img_utils.heatmap2d(np.reshape(rewards_maxent, (H,W), order='F'), 'Reward Map - Maxent', block=False)
 #   fig.savefig('MaxEnt.png')
-  plt.subplot(1, 4, 4)
-  img_utils.heatmap2d(np.reshape(rewards, (H,W), order='F'), 'Reward Map - Deep Maxent', block=False)
-  fig.savefig('DeepMaxEnt.png')
+#   plt.subplot(1, 4, 4)
+#   img_utils.heatmap2d(np.reshape(rewards, (H,W), order='F'), 'Reward Map - Deep Maxent', block=False)
+#   fig.savefig('DeepMaxEnt.png')
   
 
 
