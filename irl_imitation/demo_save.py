@@ -29,8 +29,8 @@ PARSER.add_argument('-l', '--l_traj', default=20, type=int, help='length of expe
 PARSER.add_argument('--rand_start', dest='rand_start', action='store_true', help='when sampling trajectories, randomly pick start positions')
 PARSER.add_argument('--no-rand_start', dest='rand_start',action='store_false', help='when sampling trajectories, fix start positions')
 PARSER.set_defaults(rand_start=True)
-PARSER.add_argument('-lr', '--learning_rate', default=0.01, type=float, help='learning rate')
-PARSER.add_argument('-ni', '--n_iters', default=100, type=int, help='number of iterations')
+PARSER.add_argument('-lr', '--learning_rate', default=0.02, type=float, help='learning rate')
+PARSER.add_argument('-ni', '--n_iters', default=10, type=int, help='number of iterations')
 ARGS = PARSER.parse_args()
 print ARGS
 
