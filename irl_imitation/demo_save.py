@@ -91,103 +91,105 @@ pixel_locations = [pixel_locations1, pixel_locations2, pixel_locations3, pixel_l
 print(pixel_locations)
 
 
-# def get_action(loc, next_loc):
-#     x_diff, y_diff = next_loc - loc
-#     x_diff = int(x_diff)
-#     y_diff = int(y_diff)
-#     if x_diff == 0 and y_diff == 0:
-#         return 4
-#     if x_diff == 1 and y_diff == 0:
-#         return 3
-#     if x_diff == -1 and y_diff == 0:
-#         return 2
-#     if x_diff == 0 and y_diff == -1:
-#         return 1
-#     if x_diff == 0 and y_diff == 1:
-#         return 0
+def get_action(loc, next_loc):
+    x_diff, y_diff = next_loc - loc
+    x_diff = int(x_diff)
+    y_diff = int(y_diff)
+    if x_diff == 0 and y_diff == 0:
+        return 4
+    if x_diff == 1 and y_diff == 0:
+        return 3
+    if x_diff == -1 and y_diff == 0:
+        return 2
+    if x_diff == 0 and y_diff == -1:
+        return 1
+    if x_diff == 0 and y_diff == 1:
+        return 0
 
 
 
-# def main():
-#   N_STATES = H * W
-#   N_ACTIONS = 5
-#   start_coordinates = (pixel_locations['location-lat'][0], pixel_locations['location-long'][0])
-#   end_coordinates = (pixel_locations['location-lat'][len(pixel_locations.index) - 1], pixel_locations['location-long'][len(pixel_locations.index) - 1])
+def main():
+  N_STATES = H * W
+  N_ACTIONS = 5
+  start_coordinates = (pixel_locations['location-lat'][0], pixel_locations['location-long'][0])
+  end_coordinates = (pixel_locations['location-lat'][len(pixel_locations.index) - 1], pixel_locations['location-long'][len(pixel_locations.index) - 1])
 
-#   rmap_gt = np.zeros([W, H])
-#   rmap_gt[int(start_coordinates[0]), int(start_coordinates[1])] = R_MAX
-#   rmap_gt[int(end_coordinates[0]), int(end_coordinates[1])] = R_MAX
-#   # rmap_gt[H/2, W/2] = R_MAX
+  rmap_gt = np.zeros([W, H])
+  rmap_gt[int(start_coordinates[0]), int(start_coordinates[1])] = R_MAX
+  rmap_gt[int(end_coordinates[0]), int(end_coordinates[1])] = R_MAX
+  # rmap_gt[H/2, W/2] = R_MAX
 
 
-#   gw = gridworld.GridWorld(rmap_gt, {}, 1 - ACT_RAND)
+  gw = gridworld.GridWorld(rmap_gt, {}, 1 - ACT_RAND)
 
-#   rewards_gt = np.reshape(rmap_gt, H*W, order='F')
-#   P_a = gw.get_transition_mat()
+  rewards_gt = np.reshape(rmap_gt, H*W, order='F')
+  P_a = gw.get_transition_mat()
 
-#   values_gt, policy_gt = value_iteration.value_iteration(P_a, rewards_gt, GAMMA, error=0.01, deterministic=True)
+  values_gt, policy_gt = value_iteration.value_iteration(P_a, rewards_gt, GAMMA, error=0.01, deterministic=True)
   
-#   rewards_gt = normalize(values_gt)
-#   gw = gridworld.GridWorld(np.reshape(rewards_gt, (H,W), order='F'), {}, 1 - ACT_RAND)
-#   P_a = gw.get_transition_mat()
+  rewards_gt = normalize(values_gt)
+  gw = gridworld.GridWorld(np.reshape(rewards_gt, (H,W), order='F'), {}, 1 - ACT_RAND)
+  P_a = gw.get_transition_mat()
     
-#   values_gt, policy_gt = value_iteration.value_iteration(P_a, rewards_gt, GAMMA, error=0.01, deterministic=True)
+  values_gt, policy_gt = value_iteration.value_iteration(P_a, rewards_gt, GAMMA, error=0.01, deterministic=True)
 
 
-#   # use identity matrix as feature
-#   # feat_map = np.eye(N_STATES)
+  # use identity matrix as feature
+  # feat_map = np.eye(N_STATES)
 
-#   coast_map = np.load('Feature Maps/small_maps/coast.npy')
-#   coast_map = np.reshape(coast_map, (600, 1))
+  coast_map = np.load('Feature Maps/small_maps/coast.npy')
+  coast_map = np.reshape(coast_map, (600, 1))
 
-#   forest_map = np.load('Feature Maps/small_maps/forest.npy')
-#   forest_map = np.reshape(coast_map, (600, 1))
+  forest_map = np.load('Feature Maps/small_maps/forest.npy')
+  forest_map = np.reshape(coast_map, (600, 1))
 
-#   land_map = np.load('Feature Maps/small_maps/land.npy')
-#   land_map = np.reshape(coast_map, (600, 1))
+  land_map = np.load('Feature Maps/small_maps/land.npy')
+  land_map = np.reshape(coast_map, (600, 1))
 
-#   feat_map = np.hstack((coast_map, forest_map, land_map))
+  feat_map = np.hstack((coast_map, forest_map, land_map))
 
-# # populate trajectories
-#   trajs = []
-#   terminal_state = end_coordinates
-#   for i in range(len(pixel_locations) - 1):
-#       loc = pixel_locations.iloc[i]
-#       next_loc = pixel_locations.iloc[i + 1]
-#       action = get_action(loc, next_loc)
-#       reward = rmap_gt[int(next_loc[0]), int(next_loc[1])]
-#       is_done = np.array_equal(next_loc, terminal_state)
+# populate trajectories
+  trajs = []
+  terminal_state = end_coordinates
+  for x in range(pixel_locations):
+    trajs.append([])
+    for i in range(len(pixel_locations[x]) - 1):
+        loc = pixel_locations[x].iloc[i]
+        next_loc = pixel_locations[x].iloc[i + 1]
+        action = get_action(loc, next_loc)
+        reward = rmap_gt[int(next_loc[0]), int(next_loc[1])]
+        is_done = np.array_equal(next_loc, terminal_state)
 
-#       trajs.append(Step(cur_state=int(gw.pos2idx(loc)),
-#                         action=action,
-#                         next_state=int(gw.pos2idx(next_loc)),
-#                         reward=reward,
-#                         done=is_done))
+        trajs[x].append(Step(cur_state=int(gw.pos2idx(loc)),
+                          action=action,
+                          next_state=int(gw.pos2idx(next_loc)),
+                          reward=reward,
+                          done=is_done))
   
 
-#   trajs = [trajs]
-
-#   print 'LP IRL training ..'
-#   rewards_lpirl = lp_irl(P_a, policy_gt, gamma=0.3, l1=100, R_max=R_MAX)
-# #   print 'Max Ent IRL training ..'
-# #   rewards_maxent = maxent_irl(feat_map, P_a, GAMMA, trajs, LEARNING_RATE, N_ITERS)
-# #   print 'Deep Max Ent IRL training ..'
-# #   rewards = deep_maxent_irl(feat_map, P_a, GAMMA, trajs, LEARNING_RATE, 10)
   
-#   # plots
-#   fig = plt.figure()
-#   plt.subplot(1, 2, 1)
-#   img_utils.heatmap2d(np.reshape(rewards_gt, (H,W), order='F'), 'Rewards Map - Ground Truth', block=False)
-#   fig.savefig('GroundTruth.png')
-# #   plt.subplot(1, 1, 1)
-# #   img_utils.heatmap2d(np.reshape(rewards_lpirl, (H,W), order='F'), 'Reward Map - LP', block=False)
-# #   fig.savefig('LP.png')
-# #   plt.subplot(1, 1, 1)
-# #   img_utils.heatmap2d(np.reshape(rewards_maxent, (H,W), order='F'), 'Reward Map - Maxent', block=False)
-# #   fig.savefig('MaxEnt.png')
-# #   plt.subplot(1, 4, 4)
-# #   img_utils.heatmap2d(np.reshape(rewards, (H,W), order='F'), 'Reward Map - Deep Maxent', block=False)
-# #   fig.savefig('DeepMaxEnt.png')
+
+  print 'LP IRL training ..'
+  rewards_lpirl = lp_irl(P_a, policy_gt, gamma=0.3, l1=100, R_max=R_MAX)
+  print 'Max Ent IRL training ..'
+  rewards_maxent = maxent_irl(feat_map, P_a, GAMMA, trajs, LEARNING_RATE, N_ITERS)
+#   print 'Deep Max Ent IRL training ..'
+#   rewards = deep_maxent_irl(feat_map, P_a, GAMMA, trajs, LEARNING_RATE, 10)
+  
+  # plots
+  fig = plt.figure()
+  plt.subplot(1, 2, 1)
+  img_utils.heatmap2d(np.reshape(rewards_gt, (H,W), order='F'), 'Rewards Map - Ground Truth', block=False)
+  fig.savefig('GroundTruth.png')
+#   plt.subplot(1, 1, 1)
+#   img_utils.heatmap2d(np.reshape(rewards_lpirl, (H,W), order='F'), 'Reward Map - LP', block=False)
+#   fig.savefig('LP.png')
+#   plt.subplot(1, 1, 1)
+#   img_utils.heatmap2d(np.reshape(rewards_maxent, (H,W), order='F'), 'Reward Map - Maxent', block=False)
+#   fig.savefig('MaxEnt.png')
+#   plt.subplot(1, 4, 4)
+#   img_utils.heatmap2d(np.reshape(rewards, (H,W), order='F'), 'Reward Map - Deep Maxent', block=False)
+#   fig.savefig('DeepMaxEnt.png')
   
 
 
