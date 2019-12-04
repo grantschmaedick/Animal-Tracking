@@ -48,113 +48,147 @@ N_ITERS = ARGS.n_iters
 
 # Import data
 df = pd.read_csv("csvs/Artful_Dodger-163485.csv")
+df2 = pd.read_csv("csvs/Morongo-57957.csv")
+df3 = pd.read_csv("csvs/Coy-174648.csv")
+df4 = pd.read_csv("csvs/Rosalie-57956.csv")
+
 locations = df[['location-lat', 'location-long']]
+locations2 = df2[['location-lat', 'location-long']]
+locations3 = df3[['location-lat', 'location-long']]
+locations2 = df2[['location-lat', 'location-long']]
+locations4 = df4[['location-lat', 'location-long']]
+
 in_range = locations['location-long'] <= -112.6693 
 in_range2 = locations['location-long'] >= -126.5302
+in_range3 = locations2['location-long'] <= -112.6693 
+in_range4 = locations2['location-long'] >= -126.5302
+in_range5 = locations3['location-long'] <= -112.6693 
+in_range6 = locations3['location-long'] >= -126.5302
+in_range7 = locations4['location-long'] <= -112.6693 
+in_range8 = locations4['location-long'] >= -126.5302
+
 locations = locations[in_range & in_range2] 
+locations2 = locations2[in_range3 & in_range4] 
+locations3 = locations3[in_range5 & in_range6]
+locations4 = locations4[in_range7 & in_range8]
+
 in_range_lat = locations['location-lat'] >= 30.1206
+in_range_lat2 = locations2['location-lat'] >= 30.1206
+in_range_lat3 = locations3['location-lat'] >= 30.1206
+in_range_lat4 = locations4['location-lat'] >= 30.1206
+
 locations = locations[in_range_lat]
-pixel_locations = pd.DataFrame.from_records(list(locations.apply(return_pixel, axis=1)), columns=['location-lat', 'location-long'])
+locations2 = location2s[in_range_lat2]
+locations3 = locations3[in_range_lat3]
+locations4 = locations4[in_range_lat4]
+
+pixel_locations = pd.DataFrame(columns=['1', '2', '3', '4'])
+pixel_locations['1'] = pd.DataFrame.from_records(list(locations.apply(return_pixel, axis=1)), columns=['location-lat', 'location-long'])
+pixel_locations['2'] = pd.DataFrame.from_records(list(locations2.apply(return_pixel, axis=1)), columns=['location-lat', 'location-long'])
+pixel_locations['3'] = pd.DataFrame.from_records(list(locations3.apply(return_pixel, axis=1)), columns=['location-lat', 'location-long'])
+pixel_locations['4'] = pd.DataFrame.from_records(list(locations4.apply(return_pixel, axis=1)), columns=['location-lat', 'location-long'])
 pixel_locations = pixel_locations.floordiv(18)
 
-
-def get_action(loc, next_loc):
-    x_diff, y_diff = next_loc - loc
-    x_diff = int(x_diff)
-    y_diff = int(y_diff)
-    if x_diff == 0 and y_diff == 0:
-        return 4
-    if x_diff == 1 and y_diff == 0:
-        return 3
-    if x_diff == -1 and y_diff == 0:
-        return 2
-    if x_diff == 0 and y_diff == -1:
-        return 1
-    if x_diff == 0 and y_diff == 1:
-        return 0
+print(pixel_locations)
 
 
+# def get_action(loc, next_loc):
+#     x_diff, y_diff = next_loc - loc
+#     x_diff = int(x_diff)
+#     y_diff = int(y_diff)
+#     if x_diff == 0 and y_diff == 0:
+#         return 4
+#     if x_diff == 1 and y_diff == 0:
+#         return 3
+#     if x_diff == -1 and y_diff == 0:
+#         return 2
+#     if x_diff == 0 and y_diff == -1:
+#         return 1
+#     if x_diff == 0 and y_diff == 1:
+#         return 0
 
-def main():
-  N_STATES = H * W
-  N_ACTIONS = 5
-  start_coordinates = (pixel_locations['location-lat'][0], pixel_locations['location-long'][0])
-  end_coordinates = (pixel_locations['location-lat'][len(pixel_locations.index) - 1], pixel_locations['location-long'][len(pixel_locations.index) - 1])
-
-  rmap_gt = np.zeros([W, H])
-  rmap_gt[int(start_coordinates[0]), int(start_coordinates[1])] = R_MAX
-  rmap_gt[int(end_coordinates[0]), int(end_coordinates[1])] = R_MAX
-  # rmap_gt[H/2, W/2] = R_MAX
 
 
-  gw = gridworld.GridWorld(rmap_gt, {}, 1 - ACT_RAND)
+# def main():
+#   N_STATES = H * W
+#   N_ACTIONS = 5
+#   start_coordinates = (pixel_locations['location-lat'][0], pixel_locations['location-long'][0])
+#   end_coordinates = (pixel_locations['location-lat'][len(pixel_locations.index) - 1], pixel_locations['location-long'][len(pixel_locations.index) - 1])
 
-  rewards_gt = np.reshape(rmap_gt, H*W, order='F')
-  P_a = gw.get_transition_mat()
+#   rmap_gt = np.zeros([W, H])
+#   rmap_gt[int(start_coordinates[0]), int(start_coordinates[1])] = R_MAX
+#   rmap_gt[int(end_coordinates[0]), int(end_coordinates[1])] = R_MAX
+#   # rmap_gt[H/2, W/2] = R_MAX
 
-  values_gt, policy_gt = value_iteration.value_iteration(P_a, rewards_gt, GAMMA, error=0.01, deterministic=True)
+
+#   gw = gridworld.GridWorld(rmap_gt, {}, 1 - ACT_RAND)
+
+#   rewards_gt = np.reshape(rmap_gt, H*W, order='F')
+#   P_a = gw.get_transition_mat()
+
+#   values_gt, policy_gt = value_iteration.value_iteration(P_a, rewards_gt, GAMMA, error=0.01, deterministic=True)
   
-  rewards_gt = normalize(values_gt)
-  gw = gridworld.GridWorld(np.reshape(rewards_gt, (H,W), order='F'), {}, 1 - ACT_RAND)
-  P_a = gw.get_transition_mat()
+#   rewards_gt = normalize(values_gt)
+#   gw = gridworld.GridWorld(np.reshape(rewards_gt, (H,W), order='F'), {}, 1 - ACT_RAND)
+#   P_a = gw.get_transition_mat()
     
-  values_gt, policy_gt = value_iteration.value_iteration(P_a, rewards_gt, GAMMA, error=0.01, deterministic=True)
+#   values_gt, policy_gt = value_iteration.value_iteration(P_a, rewards_gt, GAMMA, error=0.01, deterministic=True)
 
 
-  # use identity matrix as feature
-  # feat_map = np.eye(N_STATES)
+#   # use identity matrix as feature
+#   # feat_map = np.eye(N_STATES)
 
-  coast_map = np.load('Feature Maps/small_maps/coast.npy')
-  coast_map = np.reshape(coast_map, (600, 1))
+#   coast_map = np.load('Feature Maps/small_maps/coast.npy')
+#   coast_map = np.reshape(coast_map, (600, 1))
 
-  forest_map = np.load('Feature Maps/small_maps/forest.npy')
-  forest_map = np.reshape(coast_map, (600, 1))
+#   forest_map = np.load('Feature Maps/small_maps/forest.npy')
+#   forest_map = np.reshape(coast_map, (600, 1))
 
-  land_map = np.load('Feature Maps/small_maps/land.npy')
-  land_map = np.reshape(coast_map, (600, 1))
+#   land_map = np.load('Feature Maps/small_maps/land.npy')
+#   land_map = np.reshape(coast_map, (600, 1))
 
-  feat_map = np.hstack((coast_map, forest_map, land_map))
+#   feat_map = np.hstack((coast_map, forest_map, land_map))
 
-# populate trajectories
-  trajs = []
-  terminal_state = end_coordinates
-  for i in range(len(pixel_locations) - 1):
-      loc = pixel_locations.iloc[i]
-      next_loc = pixel_locations.iloc[i + 1]
-      action = get_action(loc, next_loc)
-      reward = rmap_gt[int(next_loc[0]), int(next_loc[1])]
-      is_done = np.array_equal(next_loc, terminal_state)
+# # populate trajectories
+#   trajs = []
+#   terminal_state = end_coordinates
+#   for i in range(len(pixel_locations) - 1):
+#       loc = pixel_locations.iloc[i]
+#       next_loc = pixel_locations.iloc[i + 1]
+#       action = get_action(loc, next_loc)
+#       reward = rmap_gt[int(next_loc[0]), int(next_loc[1])]
+#       is_done = np.array_equal(next_loc, terminal_state)
 
-      trajs.append(Step(cur_state=int(gw.pos2idx(loc)),
-                        action=action,
-                        next_state=int(gw.pos2idx(next_loc)),
-                        reward=reward,
-                        done=is_done))
+#       trajs.append(Step(cur_state=int(gw.pos2idx(loc)),
+#                         action=action,
+#                         next_state=int(gw.pos2idx(next_loc)),
+#                         reward=reward,
+#                         done=is_done))
   
 
-  trajs = [trajs]
+#   trajs = [trajs]
 
-  print 'LP IRL training ..'
-  rewards_lpirl = lp_irl(P_a, policy_gt, gamma=0.3, l1=100, R_max=R_MAX)
-#   print 'Max Ent IRL training ..'
-#   rewards_maxent = maxent_irl(feat_map, P_a, GAMMA, trajs, LEARNING_RATE, N_ITERS)
-#   print 'Deep Max Ent IRL training ..'
-#   rewards = deep_maxent_irl(feat_map, P_a, GAMMA, trajs, LEARNING_RATE, 10)
+#   print 'LP IRL training ..'
+#   rewards_lpirl = lp_irl(P_a, policy_gt, gamma=0.3, l1=100, R_max=R_MAX)
+# #   print 'Max Ent IRL training ..'
+# #   rewards_maxent = maxent_irl(feat_map, P_a, GAMMA, trajs, LEARNING_RATE, N_ITERS)
+# #   print 'Deep Max Ent IRL training ..'
+# #   rewards = deep_maxent_irl(feat_map, P_a, GAMMA, trajs, LEARNING_RATE, 10)
   
-  # plots
-  fig = plt.figure()
-  plt.subplot(1, 2, 1)
-  img_utils.heatmap2d(np.reshape(rewards_gt, (H,W), order='F'), 'Rewards Map - Ground Truth', block=False)
-  fig.savefig('GroundTruth.png')
-#   plt.subplot(1, 1, 1)
-#   img_utils.heatmap2d(np.reshape(rewards_lpirl, (H,W), order='F'), 'Reward Map - LP', block=False)
-#   fig.savefig('LP.png')
-#   plt.subplot(1, 1, 1)
-#   img_utils.heatmap2d(np.reshape(rewards_maxent, (H,W), order='F'), 'Reward Map - Maxent', block=False)
-#   fig.savefig('MaxEnt.png')
-#   plt.subplot(1, 4, 4)
-#   img_utils.heatmap2d(np.reshape(rewards, (H,W), order='F'), 'Reward Map - Deep Maxent', block=False)
-#   fig.savefig('DeepMaxEnt.png')
+#   # plots
+#   fig = plt.figure()
+#   plt.subplot(1, 2, 1)
+#   img_utils.heatmap2d(np.reshape(rewards_gt, (H,W), order='F'), 'Rewards Map - Ground Truth', block=False)
+#   fig.savefig('GroundTruth.png')
+# #   plt.subplot(1, 1, 1)
+# #   img_utils.heatmap2d(np.reshape(rewards_lpirl, (H,W), order='F'), 'Reward Map - LP', block=False)
+# #   fig.savefig('LP.png')
+# #   plt.subplot(1, 1, 1)
+# #   img_utils.heatmap2d(np.reshape(rewards_maxent, (H,W), order='F'), 'Reward Map - Maxent', block=False)
+# #   fig.savefig('MaxEnt.png')
+# #   plt.subplot(1, 4, 4)
+# #   img_utils.heatmap2d(np.reshape(rewards, (H,W), order='F'), 'Reward Map - Deep Maxent', block=False)
+# #   fig.savefig('DeepMaxEnt.png')
   
 
 
