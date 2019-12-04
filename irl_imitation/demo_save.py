@@ -88,8 +88,6 @@ pixel_locations3 = pd.DataFrame.from_records(list(locations3.apply(return_pixel,
 pixel_locations4 = pd.DataFrame.from_records(list(locations4.apply(return_pixel, axis=1)), columns=['location-lat', 'location-long']).floordiv(18)
 pixel_locations = [pixel_locations1, pixel_locations2, pixel_locations3, pixel_locations4]
 
-print(pixel_locations)
-
 
 def get_action(loc, next_loc):
     x_diff, y_diff = next_loc - loc
@@ -111,8 +109,8 @@ def get_action(loc, next_loc):
 def main():
   N_STATES = H * W
   N_ACTIONS = 5
-  start_coordinates = (pixel_locations['location-lat'][0], pixel_locations['location-long'][0])
-  end_coordinates = (pixel_locations['location-lat'][len(pixel_locations.index) - 1], pixel_locations['location-long'][len(pixel_locations.index) - 1])
+  start_coordinates = (pixel_locations[0]['location-lat'][0], pixel_locations[0]['location-long'][0])
+  end_coordinates = (pixel_locations[0]['location-lat'][len(pixel_locations[0].index) - 1], pixel_locations[0]['location-long'][len(pixel_locations[0].index) - 1])
 
   rmap_gt = np.zeros([W, H])
   rmap_gt[int(start_coordinates[0]), int(start_coordinates[1])] = R_MAX
