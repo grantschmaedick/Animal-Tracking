@@ -105,11 +105,15 @@ def main():
   # feat_map = np.eye(N_STATES)
 
   coast_map = np.load('Feature Maps/small_maps/coast.npy')
-  forest_map = np.load('Feature Maps/small_maps/forest.npy')
-  land_map = np.load('Feature Maps/small_maps/land.npy')
-  feat_map = np.hstack((coast_map, forest_map, land_map))
+  coast_map = np.reshape(coast_map, (600, 1))
 
-  feat_map = np.reshape(feat_map, (600, 3))
+  forest_map = np.load('Feature Maps/small_maps/forest.npy')
+  forest_map = np.reshape(coast_map, (600, 1))
+
+  land_map = np.load('Feature Maps/small_maps/land.npy')
+  land_map = np.reshape(coast_map, (600, 1))
+
+  feat_map = np.hstack((coast_map, forest_map, land_map))
 
 # populate trajectories
   trajs = []
