@@ -37,7 +37,7 @@ def compute_state_visition_freq(P_a, gamma, trajs, policy, deterministic=True):
   mu = np.zeros([N_STATES, T]) 
 
   for traj in trajs:
-    mu[int((traj.cur_state['location-lat'] + traj.cur_state['location-long']) * 10), 0] += 1
+    mu[traj[0].cur_state, 0] += 1
   mu[:,0] = mu[:,0]/len(trajs)
 
   for s in range(N_STATES):
@@ -76,7 +76,8 @@ def maxent_irl(feat_map, P_a, gamma, trajs, lr, n_iters):
   # calc feature expectations
   feat_exp = np.zeros([3])
   for episode in trajs:
-    feat_exp += feat_map[int(episode.cur_state['location-lat']),int(episode.cur_state['location-long'])]
+    for step in trajs:
+      feat_exp += feat_map[int(step.cur_state['location-lat']),int(step.cur_state['location-long'])]
   feat_exp = feat_exp/len(trajs)
 
   # training
