@@ -30,7 +30,7 @@ PARSER.add_argument('--rand_start', dest='rand_start', action='store_true', help
 PARSER.add_argument('--no-rand_start', dest='rand_start',action='store_false', help='when sampling trajectories, fix start positions')
 PARSER.set_defaults(rand_start=True)
 PARSER.add_argument('-lr', '--learning_rate', default=0.02, type=float, help='learning rate')
-PARSER.add_argument('-ni', '--n_iters', default=10, type=int, help='number of iterations')
+PARSER.add_argument('-ni', '--n_iters', default=4, type=int, help='number of iterations')
 ARGS = PARSER.parse_args()
 print ARGS
 
@@ -182,9 +182,9 @@ def main():
 #   plt.subplot(1, 1, 1)
 #   img_utils.heatmap2d(np.reshape(rewards_lpirl, (H,W), order='F'), 'Reward Map - LP', block=False)
 #   fig.savefig('LP.png')
-#   plt.subplot(1, 1, 1)
-#   img_utils.heatmap2d(np.reshape(rewards_maxent, (H,W), order='F'), 'Reward Map - Maxent', block=False)
-#   fig.savefig('MaxEnt.png')
+  plt.subplot(1, 1, 1)
+  img_utils.heatmap2d(np.reshape(rewards_maxent, (H,W), order='F'), 'Reward Map - Maxent', block=False)
+  fig.savefig('MaxEnt.png')
 #   plt.subplot(1, 4, 4)
 #   img_utils.heatmap2d(np.reshape(rewards, (H,W), order='F'), 'Reward Map - Deep Maxent', block=False)
 #   fig.savefig('DeepMaxEnt.png')
