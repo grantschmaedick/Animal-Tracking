@@ -101,8 +101,11 @@ def maxent_irl(feat_map, P_a, gamma, trajs, lr, n_iters):
 
     # update params
     theta += lr * grad
+    print('Updated theta:')
+    print(theta)
 
   rewards = np.dot(np.reshape(feat_map, (600, 3)), theta)
+  print('Final Theta:')
   print(theta)
   # return sigmoid(normalize(rewards))
   return normalize(rewards)
